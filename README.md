@@ -4,7 +4,7 @@ An AI skill that scaffolds an [Obsidian](https://obsidian.md) / [Tolaria](https:
 
 ## What it does
 
-`project-vault` initializes a `<project-name>-vault` directory inside an existing project that tracks architecture, components, decisions (ADRs), source-file indexes, progress, references, and a prioritized gap register. It also adds two merge-safe additions at the project root: a templated `README.md` and an Obsidian-workspace `.gitignore` block.
+`project-vault` initializes a `<project-name>-vault` directory inside an existing project that tracks architecture, components, decisions (ADRs), source-file indexes, progress, references, and a prioritized gap register. Each vault ships a controlled **tag vocabulary** for correlating notes across types and a **Gap Kanban** Obsidian Bases view that groups gaps by status. It also adds two merge-safe additions at the project root: a templated `README.md` and an Obsidian-workspace `.gitignore` block.
 
 ## What gets created
 
@@ -22,7 +22,8 @@ An AI skill that scaffolds an [Obsidian](https://obsidian.md) / [Tolaria](https:
     ├── gaps/gap-registry.md
     ├── progress/{current-state,phases,changelog,worklog,sessions}.md
     ├── types/                         # one template note per entity type
-    └── views/                         # 13 saved-view YAMLs
+    ├── views/                         # 13 saved-view YAMLs
+    └── Gap Kanban.base                # Obsidian Bases kanban: gaps grouped by status
 ```
 
 `templates/` is the canonical scaffold. Files contain `{{PLACEHOLDERS}}` that are substituted before writing.
@@ -57,6 +58,7 @@ See [`SKILL.md`](SKILL.md) for the full step-by-step workflow and placeholder ta
 |---|---|
 | `SKILL.md` | Skill definition, workflow, and enforced conventions |
 | `templates/vault/` | Canonical vault scaffold (substituted before writing) |
+| `templates/vault/Gap Kanban.base` | Obsidian Bases kanban: `Gap` notes grouped by `status`, showing `type`, `priority`, `tags` |
 | `templates/project-root/` | Root `README.md` template + `.gitignore` snippet |
 
 ## Conventions enforced
@@ -67,6 +69,10 @@ See [`SKILL.md`](SKILL.md) for the full step-by-step workflow and placeholder ta
 - `Gap` IDs (`GAP-001`…) and `Decision` IDs (`ADR-0001`…) are never reused.
 - Gap `priority` ∈ `high, medium, low, feature`; `status` ∈ `Open, In Progress, Resolved, Won't Fix, Deferred`.
 - Never edit an accepted ADR; write a new one that `supersedes` it.
+- Every note carries at least one **domain tag** from a controlled vocabulary
+  recorded in `AGENTS.md`; tags are lowercase kebab-case and correlate notes
+  across types.
+- `Gap Kanban.base` provides an Obsidian Bases kanban of gaps grouped by `status`.
 
 ## Maintainer notes
 

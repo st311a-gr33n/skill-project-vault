@@ -1,6 +1,6 @@
 ---
 name: project-vault
-description: Use when the user wants to initialize a new Obsidian/Tolaria project vault (persistent memory for a project), e.g. "init a project vault", "create a project vault", "start a vault for this project", "set up persistent memory". Scaffolds a <project-name>-vault directory inside the project with AGENTS.md, note types, saved views, progress/gap tracking, a project README.md, and an Obsidian-workspace-ignoring .gitignore.
+description: Use when the user wants to initialize a new Obsidian/Tolaria project vault (persistent memory for a project), e.g. "init a project vault", "create a project vault", "start a vault for this project", "set up persistent memory". Scaffolds a <project-name>-vault directory inside the project with AGENTS.md, note types, saved views, a tag vocabulary for cross-note correlation, a gap kanban base, progress/gap tracking, a project README.md, and an Obsidian-workspace-ignoring .gitignore.
 ---
 
 # project-vault
@@ -29,7 +29,8 @@ two merge-safe additions at the project root (`README.md` and an Obsidian-worksp
     ├── gaps/gap-registry.md
     ├── progress/{current-state,phases,changelog,worklog,sessions}.md
     ├── types/                         # one template note per entity type
-    └── views/                         # 13 saved-view YAMLs
+    ├── views/                         # 13 saved-view YAMLs
+    └── Gap Kanban.base                # Obsidian Bases kanban: gaps grouped by status
 ```
 
 `templates/` in this skill directory is the canonical scaffold. Files contain
@@ -68,20 +69,26 @@ two merge-safe additions at the project root (`README.md` and an Obsidian-worksp
    `N/A`, delete the "Build/test" step (item 4) from `AGENTS.md` and note "no
    build command" rather than leaving a bare `N/A`.
 
-5. **Project root README** — write `<project-root>/README.md` from
+5. **Establish the tag vocabulary** — derive a small set of project-specific
+   domain tags from the stack and description (e.g. `nfc`, `qr`, `app-ui`) and
+   write them into the Domain row of the `## Tags` section in `AGENTS.md`.
+   Confirm every `types/*.md` uses `tags: [type]`. Tags are the primary means of
+   correlating notes across types, so this vocabulary must exist from the start.
+
+6. **Project root README** — write `<project-root>/README.md` from
    `templates/project-root/README.md`. If a README already exists, ask before
    overwriting; otherwise leave it and just note the vault in it.
 
-6. **Project root .gitignore** — append the block from
+7. **Project root .gitignore** — append the block from
    `templates/project-root/gitignore-obsidian-snippet` to `<project-root>/.gitignore`
    (create it if missing). Only add lines that are not already present; never
    clobber existing rules.
 
-7. **Mount & open** — if Tolaria MCP tools are available, attach the new vault via
+8. **Mount & open** — if Tolaria MCP tools are available, attach the new vault via
    `tolaria_attach_vault` (absolute path) and open `Home.md` with
    `tolaria_open_note`. Skip gracefully if those tools are absent.
 
-8. **Summarize** — report the vault path, the files created, and the "next steps":
+9. **Summarize** — report the vault path, the files created, and the "next steps":
    open the vault in Obsidian/Tolaria, and agents should read
    `progress/current-state.md` first.
 
@@ -93,6 +100,12 @@ two merge-safe additions at the project root (`README.md` and an Obsidian-worksp
 - `Gap` IDs (`GAP-001`…) and `Decision` IDs (`ADR-0001`…) are never reused.
 - Gap `priority` ∈ `high, medium, low, feature`; `status` ∈ `Open, In Progress, Resolved, Won't Fix, Deferred`.
 - Never edit an accepted ADR; write a new one that `supersedes` it.
+- Every note carries at least one **domain tag** from the controlled vocabulary in
+  `AGENTS.md`; tags are lowercase kebab-case and reused before invented. Tag each
+  gap with the domain tags of the subsystem it affects so gaps correlate with the
+  rest of the vault.
+- `Gap Kanban.base` is an Obsidian Bases kanban that filters `type == "Gap"`,
+  groups by `status`, and displays `type`, `priority`, and `tags`.
 - The vault's own `.gitignore` ignores `.obsidian/workspace*` and related UI state.
 
 ## Notes
